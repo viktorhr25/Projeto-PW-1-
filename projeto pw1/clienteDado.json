@@ -1,0 +1,7 @@
+{
+"cliente":[
+    {"id": 1, "nome": "Rodrigo", "telefone":" 123456798", "bicicleta": "16 houston rosa", "servicos":[1,2,3]},
+    {"id": 2, "nome": "Bruna", "telefone":" 123456799", "bicicleta": " 29 oggi rosa", "servico":[1]},
+    {"id": 3, "nome": "heloisa", "telefone":" 123456797", "bicileta": "20 uruguaia rosa", "servico":[2,3]}
+]
+}

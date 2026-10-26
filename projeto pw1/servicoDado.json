@@ -1,0 +1,7 @@
+{
+    "servicos":[
+    {"id": 1 , "nomeServico": "Regulagem de freio", "valor": 25.00 },
+    {"id": 2 , "nomeServico": "Regulagem de cambio", "valor": 25.00},
+    {"id": 3 , "nomeServico": "Desempenar roda", "valor": 30.00}
+]
+}

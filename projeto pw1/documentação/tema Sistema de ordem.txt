@@ -1,0 +1,53 @@
+tema: Sistema de ordem de serviço para oficina de bicicleta.
+
+Uma aplicaçao web em que o administrador carregue o site com os tipos de serviço que a oficina realiza e com os valores de mao de obra.
+O funcionario/atendente entra com o nome do cliente e modelo da bicicleta do serviço, escolhendo o tipo de serviço que ira realizar. Assim gerando um ticket com o numero da ordem de serviço.
+O mecanico consulta a ordem de serviço com o numero do ticket, onde pode sinalizar quando a bicicleta estiver pronta.
+
+entidades:
+
+serviços
+[
+{
+id: 1 , nomeServico: "Regulagem de freio", valor: 25.00 
+}
+{
+id: 2 , nomeServico: "Regulagem de cambio", valor: 25.00
+}
+{
+id: 3 , nomeServico: "Desempenar roda", valor: 30.00
+}
+]
+
+cliente 
+[
+{
+id: 1, nome: "Rodrigo", telefone:" 123456798", bicicleta: "16 houston rosa", servicos:[1,2,3]
+}
+{
+id: 2, nome: "Bruna", telefone:" 123456799", bicicleta: " 29 oggi rosa", servico:[1]
+}
+{
+id: 3, nome: "heloisa", telefone:" 123456797", bicileta: "20 uruguaia rosa", servico:[2,3]
+}
+]
+
+funcionario
+[
+{
+id: 1, nome: "josef", funcao: "administrador", senha: 1234
+}
+{
+id: 2, nome: "josefa", funcao: "atendente", senha: 123
+}
+{
+id: 3, nome: "josefal", funcao: "mecanico", senha: 12
+}
+]
+
+
+
+
+
+
+
