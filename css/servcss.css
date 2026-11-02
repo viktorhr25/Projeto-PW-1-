@@ -1,0 +1,86 @@
+:root {
+  --verde: #2f6b52;
+  --verde-claro: #e3f1ea;
+  --borda: #e5e8e6;
+}
+body {
+  background: #f4f6f5;
+}
+header.topo {
+  background: #fff;
+  border-bottom: 1px solid var(--borda);
+}
+header.topo a {
+  color: #444;
+  text-decoration: none;
+  margin-left: 1rem;
+}
+header.topo a:hover {
+  color: var(--verde);
+}
+
+.cartao {
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+}
+.aba-ativa {
+  color: var(--verde);
+  font-weight: 600;
+  border-bottom: 2px solid var(--verde);
+  padding-bottom: 0.75rem;
+}
+.contador {
+  background: var(--verde-claro);
+  color: var(--verde);
+  border-radius: 6px;
+  padding: 0 0.4rem;
+  font-size: 0.75rem;
+  margin-left: 0.35rem;
+}
+.tabela-servicos thead th {
+  background: #f8f9f8;
+  color: #7a817d;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--borda);
+}
+.tabela-servicos td {
+  vertical-align: middle;
+  padding: 0.9rem 0.75rem;
+}
+.codigo {
+  color: #9aa19d;
+  font-size: 0.75rem;
+}
+.valor {
+  font-weight: 600;
+  text-align: right;
+}
+
+.icone-form {
+  width: 36px;
+  height: 36px;
+  background: var(--verde-claro);
+  color: var(--verde);
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+.btn-verde {
+  background: var(--verde);
+  border-color: var(--verde);
+  color: #fff;
+}
+.btn-verde:hover {
+  background: #265843;
+  border-color: #265843;
+  color: #fff;
+}
+.form-control:focus,
+.input-group:focus-within .input-group-text {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 0.2rem rgba(47, 107, 82, 0.15);
+}
