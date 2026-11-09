@@ -21,14 +21,6 @@ if (!serv) {
 }
 
 let idEditando = null;
-let termoBusca = "";
-
-function formatarValor(valor) {
-  return Number(valor).toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-}
 
 function servicosFiltrados() {
   const termo = termoBusca.trim().toLowerCase();
