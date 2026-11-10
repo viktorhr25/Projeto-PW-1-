@@ -84,3 +84,8 @@ header.topo a:hover {
   border-color: var(--verde);
   box-shadow: 0 0 0 0.2rem rgba(47, 107, 82, 0.15);
 }
+
+.nav-pills .nav-link.active {
+  background-color: #2f6b52;
+  color: #fff;
+}

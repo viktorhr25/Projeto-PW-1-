@@ -1,15 +1,3 @@
-function recuperarRegistros(chave) {
-  const regs = localStorage.getItem(chave);
-  if (regs) {
-    return JSON.parse(regs);
-  } else {
-    return null;
-  }
-}
-function persistir(chave, valorJson) {
-  localStorage.setItem(chave, JSON.stringify(valorJson));
-}
-
 let serv = recuperarRegistros("servicos");
 if (!serv) {
   serv = [
@@ -23,7 +11,7 @@ if (!serv) {
 let idEditando = null;
 
 function servicosFiltrados() {
-  const termo = termoBusca.trim().toLowerCase();
+  const termo = termoBusca.trim().toLowerCase(); // trim tira espaços do fim e diminui para minuscula
   if (!termo) return serv;
   return serv.filter(
     (s) =>
@@ -33,7 +21,7 @@ function servicosFiltrados() {
 }
 
 function listarServicos() {
-  const lista = servicosFiltrados();
+  const lista = serv;
 
   if (lista.length === 0) {
     return `<tr><td colspan="3" class="text-center text-secondary py-5">Nenhum serviço encontrado</td></tr>`;
@@ -59,14 +47,10 @@ function atualizarTabela() {
   document.getElementById("tabela").innerHTML = listarServicos();
   document.getElementById("contador").textContent = serv.length;
   document.getElementById("rodape").textContent =
-    `Mostrando ${servicosFiltrados().length} de ${serv.length} serviços`;
+    `Mostrando ${serv.length} serviços`;
 }
 
-function filtrarServicos(texto) {
-  termoBusca = texto;
-  atualizarTabela();
-}
-
+//botão limpar formulario
 function limparForm() {
   document.getElementById("formServico").reset();
   idEditando = null;
@@ -92,7 +76,7 @@ function excluirserv(id) {
   const indice = serv.findIndex((s) => s.id === id);
   if (indice !== -1) {
     serv.splice(indice, 1);
-    atualizarTabela(); 
+    atualizarTabela();
     persistir("servicos", serv);
     return true;
   } else {
