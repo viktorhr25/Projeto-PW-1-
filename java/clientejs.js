@@ -1,3 +1,4 @@
+//persistência de dados no localStorage
 let cli = recuperarRegistros("clientes");
 if (!cli) {
   cli = [
@@ -30,27 +31,31 @@ if (!cli) {
   persistir("clientes", cli);
 }
 
-let idEditando = null;
-
 /* ---------- lista ---------- */
+
+//termo de busca atual (para filtrar a lista)
 let termoBusca = "";
 
+//função para filtrar os clientes pelo nome, usando o termo de busca
 function filtrarClientes(valor) {
   termoBusca = valor;
   atualizarTabela();
 }
 
+//retorna a lista de clientes filtrada pelo termo de busca
 function clientesFiltrados() {
   const termo = termoBusca.trim().toLowerCase();
   if (!termo) return cli;
   return cli.filter((c) => c.nome.toLowerCase().includes(termo));
 }
+
+//desenha a tabela de clientes na tela
 function listarClientes() {
   const lista = clientesFiltrados();
 
-  if (cli.length === 0) {
+  if (cli.length === 0) { 
     return `<tr><td colspan="4" class="text-center text-secondary py-5">Nenhum cliente cadastrado</td></tr>`;
-  }
+  } // nenhum cliente cadastrado
   let retorno = "";
   lista.forEach((c) => {
     retorno += `<tr>
@@ -67,6 +72,7 @@ function listarClientes() {
   return retorno;
 }
 
+//atualiza a tabela de clientes na tela
 function atualizarTabela() {
   const lista = clientesFiltrados();
 
@@ -78,17 +84,22 @@ function atualizarTabela() {
 }
 
 /* ---------- CRUD ---------- */
+//saber qual cliente está sendo editado (null = nenhum)
+let idEditando = null;
 
+//busca um cliente pelo id
 function buscarCliente(id) {
   return cli.find((c) => c.id === id) || null;
 }
 
+//adiciona um novo cliente na lista e persiste no localStorage
 function adicionarCliente(nome, telefone) {
   const novoid = cli.length ? Math.max(...cli.map((c) => c.id)) + 1 : 1;
   cli.push({ id: novoid, nome, telefone, servicos: [] });
   persistir("clientes", cli);
 }
 
+//exclui um cliente da lista e persiste no localStorage
 function excluirCliente(id) {
   if (!confirm("Excluir este cliente?")) return;
   const indice = cli.findIndex((c) => c.id === id);
@@ -98,6 +109,7 @@ function excluirCliente(id) {
   atualizarTabela();
 }
 
+//limpa o formulário de cadastro/edição de cliente
 function limparForm() {
   document.getElementById("formCliente").reset();
   idEditando = null;
@@ -105,6 +117,7 @@ function limparForm() {
   document.getElementById("tituloForm").textContent = "Adicionar cliente";
 }
 
+//preenche o formulário de edição de cliente com os dados do cliente selecionado
 function buscarClienteForm(id) {
   const cliente = buscarCliente(id);
   if (!cliente) {
@@ -117,7 +130,7 @@ function buscarClienteForm(id) {
   document.getElementById("btnSalvar").textContent = "Salvar alteração";
   document.getElementById("tituloForm").textContent = "Editar cliente";
 }
-
+//salva um novo cliente ou altera um cliente existente, dependendo do estado do idEditando
 function salvarCliente(event) {
   event.preventDefault();
   const nome = document.getElementById("nome").value.trim();
@@ -144,6 +157,7 @@ function salvarCliente(event) {
 
 /* ---------- modal de serviços ---------- */
 
+// variáveis para controlar o modal de serviços
 let clienteModal = null;
 let gruposModal = [];
 
@@ -178,7 +192,7 @@ function historicoDoCliente(id) {
   return itens;
 }
 
-// agrupa por bicicleta (ignora maiúsculas e espaços extras)
+// agrupa por bicicleta 
 function agruparPorBicicleta(itens) {
   const mapa = new Map();
   itens.forEach((i) => {
@@ -190,6 +204,7 @@ function agruparPorBicicleta(itens) {
   return [...mapa.values()];
 }
 
+// mostra o modal de serviços do cliente selecionado
 function mostrarServicos(id) {
   const cliente = buscarCliente(id);
   if (!cliente) return;
@@ -203,7 +218,7 @@ function mostrarServicos(id) {
   ).show();
 }
 
-// tela 1: lista de bicicletas
+// lista de bicicletas
 function mostrarBicicletas() {
   document.getElementById("tituloServicos").textContent =
     `Bicicletas de ${clienteModal.nome}`;
@@ -225,7 +240,7 @@ function mostrarBicicletas() {
   document.getElementById("conteudoModal").innerHTML = html;
 }
 
-// tela 2: o que foi feito na bicicleta escolhida
+// mostra o que foi feito na bicicleta escolhida
 function mostrarDetalhesBicicleta(indice) {
   const g = gruposModal[indice];
   const catalogo = recuperarRegistros("servicos") || [];
