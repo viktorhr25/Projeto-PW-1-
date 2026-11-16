@@ -16,14 +16,20 @@
     <header
       class="topo py-3 px-4 d-flex justify-content-between align-items-center"
     >
-      <strong>SQNSN</strong>
+      <strong>Sua marca aqui</strong>
       <nav>
-        <ul class="nav nav-pills" >
+        <ul class="nav nav-pills">
           <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="servico.html"  >Serviços</a></li>
-          <li class="nav-item"><a class="nav-link "href="clientes.html">Clientes</a></li>
-          <li class="nav-item"><a class="nav-link" href="ordem.html" > Ordens de serviço</a></li>
-      </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="servico.html">Serviços</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clientes.html">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ordem.html"> Ordens de serviço</a>
+          </li>
+        </ul>
       </nav>
     </header>
 
@@ -42,7 +48,9 @@
                 <tr>
                   <th class="ps-4">Cliente</th>
                   <th>Bicicleta</th>
+                  <th>Data</th>
                   <th>Serviço</th>
+                  <th>Status</th>
                   <th class="text-end">Valor</th>
                   <th class="text-end pe-4">Ações</th>
                 </tr>
@@ -61,22 +69,31 @@
           <div class="cartao p-4">
             <div class="d-flex align-items-center gap-2 mb-1">
               <span class="icone-form">+</span>
-              <h5 class="mb-0">Nova ordem de serviço</h5>
+              <h5 class="mb-0" id="tituloForm">Nova ordem de serviço</h5>
             </div>
             <p class="text-secondary small border-bottom pb-3"></p>
 
             <form id="formOS" onsubmit="salvarOS(event)">
               <div class="mb-3">
-                <label class="form-label">Cliente *</label>
-                <div id="listaClientes"></div>
-                <select
-                  class="form-select mt-2"
-                  id="cliente"
-                  onchange="listarClientes()"
-                >
-                  <option value="">Selecione um cliente</option>
-                </select>
-
+                <label for="buscaCliente" class="form-label">Cliente *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="buscaCliente"
+                  placeholder="Digite o nome ou telefone..."
+                  autocomplete="off"
+                />
+                <input type="hidden" id="cliente" />
+                <div
+                  id="sugestoes"
+                  class="list-group position-absolute w-100 shadow-sm d-none"
+                  style="z-index: 10; max-height: 220px; overflow-y: auto"
+                ></div>
+                <div
+                  id="clienteEscolhido"
+                  class="small text-success mt-1"
+                ></div>
+              </div>
               <div class="mb-3">
                 <label for="bicicleta" class="form-label"
                   >Bicicleta (nome/modelo) *</label
@@ -89,19 +106,16 @@
                   required
                 />
               </div>
-
               <div class="mb-3">
                 <label class="form-label">Serviços *</label>
                 <div id="listaServicos"></div>
                 <select
                   class="form-select mt-2"
                   id="servico"
-                  onchange="listarServicos()"
+                  onchange="adicionarServico()"
                 >
-
                   <option value="">Selecione um serviço</option>
                 </select>
-                
               </div>
 
               <div class="d-flex justify-content-between fw-bold mb-4">
@@ -109,8 +123,11 @@
                 <span id="total">R$ 0,00</span>
               </div>
 
-              <button type="submit" class="btn btn-verde w-100 py-2"
-                  id="btnSalvar">
+              <button
+                type="submit"
+                class="btn btn-verde w-100 py-2"
+                id="btnSalvar"
+              >
                 Salvar ordem
               </button>
               <button
@@ -137,6 +154,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="java/funcgeral.js"></script>
     <script src="java/indexjs.js"></script>
-   
   </body>
 </html>

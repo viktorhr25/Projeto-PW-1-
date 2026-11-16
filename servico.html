@@ -15,14 +15,22 @@
     <header
       class="topo py-3 px-4 d-flex justify-content-between align-items-center"
     >
-      <strong>SQNSN</strong>
+      <strong>Sua marca aqui</strong>
       <nav>
-        <ul class="nav nav-pills" >
-          <li class="nav-item"><a class="nav-link " href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#"  >Serviços</a></li>
-          <li class="nav-item"><a class="nav-link "href="clientes.html">Clientes</a></li>
-          <li class="nav-item"><a class="nav-link" href="ordem.html" > Ordens de serviço</a></li>
-      </ul>
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Serviços</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clientes.html">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ordem.html"> Ordens de serviço</a>
+          </li>
+        </ul>
       </nav>
     </header>
 
@@ -35,14 +43,16 @@
                 Todos os serviços <span class="contador" id="contador">0</span>
               </span>
             </div>
-               <div class="p-3">
+
+            <div class="p-3 border-bottom">
               <input
                 type="search"
                 id="busca"
                 class="form-control"
-                placeholder="Buscar por nome..."
+                placeholder="Buscar por nome ou código..."
                 oninput="filtrarServicos(this.value)"
               />
+            </div>
 
             <table class="table table-hover mb-0 tabela-servicos">
               <thead>
@@ -117,8 +127,14 @@
         </aside>
       </div>
     </main>
+    <footer class="px-4 pb-3">
+      <a
+        href="https://drive.google.com/file/d/1ylhFZQAvUDRVdmB8-LkAt4ZZd2TmN20t/view?usp=sharing"
+        >documentação</a
+      >
+      <p>© 2026 projeto pw1 Viktor Regert.</p>
+    </footer>
     <script src="java/funcgeral.js"></script>
     <script src="java/servjs.js"></script>
-    
   </body>
 </html>

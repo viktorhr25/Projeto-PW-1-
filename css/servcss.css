@@ -3,8 +3,16 @@
   --verde-claro: #e3f1ea;
   --borda: #e5e8e6;
 }
+
 body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #f4f6f5;
+}
+
+main {
+  flex: 1;
 }
 header.topo {
   background: #fff;

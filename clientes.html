@@ -15,14 +15,22 @@
     <header
       class="topo py-3 px-4 d-flex justify-content-between align-items-center"
     >
-      <strong>SQNSN</strong>
+      <strong>Sua marca aqui</strong>
       <nav>
-        <ul class="nav nav-pills" >
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="servico.html"  >Serviços</a></li>
-          <li class="nav-item"><a class="nav-link active" href="clientes.html">Clientes</a></li>
-          <li class="nav-item"><a class="nav-link" href="ordem.html" > Ordens de serviço</a></li>
-      </ul>
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="servico.html">Serviços</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="clientes.html">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ordem.html"> Ordens de serviço</a>
+          </li>
+        </ul>
       </nav>
     </header>
 
@@ -34,6 +42,15 @@
               <span class="aba-ativa d-inline-block">
                 Todos os clientes <span class="contador" id="contador">0</span>
               </span>
+              <div class="p-3 border-bottom">
+                <input
+                  type="search"
+                  id="busca"
+                  class="form-control"
+                  placeholder="Buscar cliente por nome..."
+                  oninput="filtrarClientes(this.value)"
+                />
+              </div>
             </div>
 
             <table class="table table-hover mb-0 tabela-servicos">
@@ -109,10 +126,12 @@
                 data-bs-dismiss="modal"
               ></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="conteudoModal">
               <table class="table mb-0">
                 <thead>
                   <tr>
+                    <th>OS</th>
+                    <th>Data</th>
                     <th>Serviço</th>
                     <th>Bicicleta</th>
                     <th class="text-end">Valor</th>
@@ -125,9 +144,16 @@
         </div>
       </div>
     </main>
+    <footer class="px-4 pb-3">
+      <a
+        href="https://drive.google.com/file/d/1ylhFZQAvUDRVdmB8-LkAt4ZZd2TmN20t/view?usp=sharing"
+        >documentação</a
+      >
+      <p>© 2026 projeto pw1 Viktor Regert.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <sxcript src="java/funcgeral.js"></script>
+    <script src="java/funcgeral.js"></script>
     <script src="java/clientejs.js"></script>
   </body>
 </html>

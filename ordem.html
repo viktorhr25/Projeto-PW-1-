@@ -14,35 +14,44 @@
     <header
       class="topo py-3 px-4 d-flex justify-content-between align-items-center"
     >
-      <strong>SQNSN</strong>
+      <strong>Sua marca aqui</strong>
       <nav>
-        <ul class="nav nav-pills" >
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="servico.html"  >Serviços</a></li>
-          <li class="nav-item"><a class="nav-link "href="clientes.html">Clientes</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#" > Ordens de serviço</a></li>
-      </ul>
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="servico.html">Serviços</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="clientes.html">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#"> Ordens de serviço</a>
+          </li>
+        </ul>
       </nav>
     </header>
-    <main>
-        <div class="row g-4">
+    <main class="container-fluid p-4">
+      <div class="row g-4">
         <section class="col-lg-8">
           <div class="cartao">
-            <div class="px-4 pt-3 border-bottom">
-              <span class="aba-ativa d-inline-block">
-                Ordens de serviço <span class="contador" id="contador">0</span>
-              </span>
+            <div class="px-4 pt-3 pb-2 border-bottom">
+              <ul class="nav nav-pills gap-1" id="abas"></ul>
             </div>
 
             <table class="table table-hover mb-0 tabela-servicos">
               <thead>
                 <tr>
-                  <th class="ps-4">Serviço</th>
-                  <th class="text-end">Cliente</th>
-                  <th class="text-end pe-4">Dia</th>
+                  <th class="ps-4">OS</th>
+                  <th>Data</th>
+                  <th>Cliente</th>
+                  <th>Bicicleta</th>
+                  <th>Status</th>
+                  <th class="text-end pe-4">Valor</th>
                 </tr>
               </thead>
-              <tbody id=""></tbody>
+              <tbody id="tabela"></tbody>
             </table>
 
             <div
@@ -54,23 +63,21 @@
 
         <aside class="col-lg-4">
           <div class="cartao p-4">
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <span class="icone-form">.</span>
-              <h5 class="mb-0" id="tituloForm">Serviço</h5>
+            <h5 class="mb-3" id="tituloDetalhes">Detalhes da OS</h5>
+            <div id="detalhes" class="text-secondary small">
+              Clique em uma ordem para iniciar o atendimento.
             </div>
-            <p class="text-secondary small border-bottom pb-3"></p>
-            
-            <div class="mb-3">
-
-              
-            
-              
-
-              
-            </form>
           </div>
         </aside>
+      </div>
     </main>
+    <footer class="px-4 pb-3">
+      <a
+        href="https://drive.google.com/file/d/1ylhFZQAvUDRVdmB8-LkAt4ZZd2TmN20t/view?usp=sharing"
+        >documentação</a
+      >
+      <p>© 2026 projeto pw1 Viktor Regert.</p>
+    </footer>
     <script src="java/funcgeral.js"></script>
     <script src="java/ordemjs.js"></script>
   </body>

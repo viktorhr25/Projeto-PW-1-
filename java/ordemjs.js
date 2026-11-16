@@ -1,134 +1,178 @@
+let ordens = recuperarRegistros("ordens") || [];
+let filtro = "abertas"; // abertas = pendentes + em andamento
+let osAberta = null;
 
-function buscarCliente(id) {
-  return cli.find((c) => c.id === id) || null;
+const FILTROS = {
+  abertas: { texto: "Abertas", regra: (o) => statusDe(o) !== "finalizada" },
+  pendente: { texto: "Pendentes", regra: (o) => statusDe(o) === "pendente" },
+  andamento: {
+    texto: "Em andamento",
+    regra: (o) => statusDe(o) === "andamento",
+  },
+  finalizada: {
+    texto: "Finalizadas",
+    regra: (o) => statusDe(o) === "finalizada",
+  },
+  todas: { texto: "Todas", regra: () => true },
+};
+
+function nomeCliente(id) {
+  const clientes = recuperarRegistros("clientes") || [];
+  const c = clientes.find((x) => x.id === id);
+  return c ? c.nome : "Cliente removido";
 }
 
-function buscarServ(id) {
-  return serv.find((s) => s.id === id) || null;
+function somarServicos(ids) {
+  const catalogo = recuperarRegistros("servicos") || [];
+  return ids.reduce((soma, id) => {
+    const s = catalogo.find((x) => x.id === id);
+    return soma + (s ? Number(s.valor) : 0);
+  }, 0);
 }
 
-
-function preencherClientes() {
-  let html = `<option value="">Selecione...</option>`;
-  cli.forEach((c) => {
-    html += `<option value="${c.id}">${c.nome}</option>`;
-  });
-  document.getElementById("cliente").innerHTML = html;
+function buscarOS(numero) {
+  return ordens.find((o) => o.numero === numero) || null;
 }
 
-function preencherServicos() {
-  if (serv.length === 0) {
-    document.getElementById("listaServicos").innerHTML =
-      `<div class="text-secondary small">Cadastre serviços primeiro</div>`;
-    return;
-  }
-  let html = "";
-  serv.forEach((s) => {
-    html += `<div class="form-check d-flex justify-content-between">
-      <div>
-        <input class="form-check-input" type="checkbox" value="${s.id}"
-               id="serv${s.id}" onchange="calcularTotal()">
-        <label class="form-check-label" for="serv${s.id}">${s.nome}</label>
-      </div>
-      <span class="text-secondary">${formatarValor(s.valor)}</span>
-    </div>`;
-  });
-  document.getElementById("listaServicos").innerHTML = html;
+/* ---------- abas e tabela ---------- */
+
+function desenharAbas() {
+  document.getElementById("abas").innerHTML = Object.entries(FILTROS)
+    .map(([chave, f]) => {
+      const qtd = ordens.filter(f.regra).length;
+      return `<li class="nav-item">
+        <button class="nav-link py-1 ${chave === filtro ? "active" : ""}" onclick="trocarFiltro('${chave}')">
+          ${f.texto} <span class="badge text-bg-light text-dark">${qtd}</span>
+        </button>
+      </li>`;
+    })
+    .join("");
 }
 
-function idsSelecionados() {
-  const marcados = document.querySelectorAll("#listaServicos input:checked");
-  return [...marcados].map((input) => Number(input.value));
-}
-
-function calcularTotal() {
-  const total = idsSelecionados().reduce(
-    (soma, id) => soma + Number(buscarServ(id).valor),
-    0,
-  );
-  document.getElementById("total").textContent = formatarValor(total);
-}
-
-function limparForm() {
-  document.getElementById("formOS").reset();
-  calcularTotal();
-}
-
-
-function listarOS() {
-  let retorno = "";
-  let quantidade = 0;
-  let soma = 0;
-
-  cli.forEach((c) => {
-    (c.servicos || []).forEach((item, indice) => {
-      const s = buscarServ(item.servicoId);
-      quantidade++;
-      if (s) soma += Number(s.valor);
-
-      retorno += `<tr>
-        <td class="ps-4">${c.nome}</td>
-        <td>${item.bicicleta}</td>
-        <td>${s ? s.nome : "Serviço removido"}</td>
-        <td class="text-end">${s ? formatarValor(s.valor) : "-"}</td>
-        <td class="text-end pe-4">
-          <button class="btn btn-sm btn-outline-danger"
-                  onclick="excluirOS(${c.id}, ${indice})">Excluir</button>
-        </td>
-      </tr>`;
-    });
-  });
-
-  if (quantidade === 0) {
-    retorno = `<tr><td colspan="5" class="text-center text-secondary py-5">Nenhuma ordem de serviço</td></tr>`;
-  }
-  return { html: retorno, quantidade, soma };
+function trocarFiltro(chave) {
+  filtro = chave;
+  atualizarTabela();
 }
 
 function atualizarTabela() {
-  const os = listarOS();
-  document.getElementById("tabela").innerHTML = os.html;
-  document.getElementById("contador").textContent = os.quantidade;
-  document.getElementById("rodape").textContent =
-    `${os.quantidade} serviços — total ${formatarValor(os.soma)}`;
-}
+  const lista = ordens.filter(FILTROS[filtro].regra);
 
-
-function adicionarOS(clienteId, bicicleta, idsServicos) {
-  const cliente = buscarCliente(clienteId);
-  if (!cliente.servicos) cliente.servicos = [];
-
-  idsServicos.forEach((id) => {
-    cliente.servicos.push({ servicoId: id, bicicleta: bicicleta });
+  const antigasPrimeiro = ["abertas", "pendente", "andamento"].includes(filtro);
+  lista.sort((a, b) => {
+    const cmp =
+      paraISO(a.data).localeCompare(paraISO(b.data)) || a.numero - b.numero;
+    return antigasPrimeiro ? cmp : -cmp;
   });
-  persistir("clientes", cli);
+
+  let html = "";
+  if (lista.length === 0) {
+    html = `<tr><td colspan="6" class="text-center text-secondary py-5">Nenhuma ordem de serviço</td></tr>`;
+  } else {
+    lista.forEach((o) => {
+      html += `<tr class="${o.numero === osAberta ? "table-active" : ""}" style="cursor:pointer"
+                   onclick="verOS(${o.numero})">
+        <td class="ps-4">#${o.numero}</td>
+        <td>${formatarData(o.data)}</td>
+        <td>${nomeCliente(o.clienteId)}</td>
+        <td>${o.bicicleta}</td>
+        <td>${badgeStatus(o)}</td>
+        <td class="text-end pe-4">${formatarValor(somarServicos(o.servicos))}</td>
+      </tr>`;
+    });
+  }
+
+  document.getElementById("tabela").innerHTML = html;
+  document.getElementById("rodape").textContent =
+    `${lista.length} ordens listadas`;
+  desenharAbas();
 }
 
-function excluirOS(clienteId, indice) {
-  if (!confirm("Excluir este serviço da ordem?")) return;
-  const cliente = buscarCliente(clienteId);
-  cliente.servicos.splice(indice, 1);
-  persistir("clientes", cli);
+/* ---------- fluxo de status ---------- */
+
+// clicar na OS: se estava pendente, passa para em andamento
+function verOS(numero) {
+  const o = buscarOS(numero);
+  if (!o) return;
+
+  if (statusDe(o) === "pendente") {
+    o.status = "andamento";
+    o.iniciadaEm = hoje();
+    persistir("ordens", ordens);
+  }
+
+  osAberta = numero;
   atualizarTabela();
+  desenharDetalhes();
 }
 
-function salvarOS(event) {
-  event.preventDefault();
-  const clienteId = Number(document.getElementById("cliente").value);
-  const bicicleta = document.getElementById("bicicleta").value.trim();
-  const ids = idsSelecionados();
+function finalizarOS(numero) {
+  const o = buscarOS(numero);
+  if (!o || !confirm("Marcar esta ordem como finalizada?")) return;
+  o.status = "finalizada";
+  o.finalizadaEm = hoje();
+  persistir("ordens", ordens);
+  atualizarTabela();
+  desenharDetalhes();
+}
 
-  if (!clienteId || !bicicleta || ids.length === 0) {
-    alert("Escolha o cliente, informe a bicicleta e marque ao menos um serviço");
+function reabrirOS(numero) {
+  const o = buscarOS(numero);
+  if (!o) return;
+  o.status = "andamento";
+  delete o.finalizadaEm;
+  persistir("ordens", ordens);
+  atualizarTabela();
+  desenharDetalhes();
+}
+
+/* ---------- painel de detalhes ---------- */
+
+function desenharDetalhes() {
+  const o = buscarOS(osAberta);
+  const painel = document.getElementById("detalhes");
+  if (!o) {
+    document.getElementById("tituloDetalhes").textContent = "Detalhes da OS";
+    painel.className = "text-secondary small";
+    painel.textContent = "Clique em uma ordem para iniciar o atendimento.";
     return;
   }
 
-  adicionarOS(clienteId, bicicleta, ids);
-  alert("Ordem de serviço salva!");
-  limparForm();
-  atualizarTabela();
+  const catalogo = recuperarRegistros("servicos") || [];
+  const itens = o.servicos
+    .map((id) => {
+      const s = catalogo.find((x) => x.id === id);
+      return `<li class="list-group-item d-flex justify-content-between">
+        <span>${s ? s.nome : "Serviço removido"}</span>
+        <span>${s ? formatarValor(s.valor) : "-"}</span>
+      </li>`;
+    })
+    .join("");
+
+  let acao = "";
+  if (statusDe(o) === "andamento") {
+    acao = `<button class="btn btn-verde w-100 py-2" onclick="finalizarOS(${o.numero})">Finalizar serviço</button>`;
+  } else if (statusDe(o) === "finalizada") {
+    acao = `<button class="btn btn-outline-secondary w-100" onclick="reabrirOS(${o.numero})">Reabrir</button>`;
+  }
+
+  document.getElementById("tituloDetalhes").textContent = `OS #${o.numero}`;
+  painel.className = "";
+  painel.innerHTML = `
+    <p class="mb-1">${badgeStatus(o)}</p>
+    <p class="mb-1"><strong>Cliente:</strong> ${nomeCliente(o.clienteId)}</p>
+    <p class="mb-1"><strong>Bicicleta:</strong> ${o.bicicleta}</p>
+    <p class="mb-1"><strong>Data:</strong> ${formatarData(o.data)}</p>
+    ${o.iniciadaEm ? `<p class="mb-1"><strong>Iniciada em:</strong> ${formatarData(o.iniciadaEm)}</p>` : ""}
+    ${o.finalizadaEm ? `<p class="mb-1"><strong>Finalizada em:</strong> ${formatarData(o.finalizadaEm)}</p>` : ""}
+    <ul class="list-group my-3">${itens}</ul>
+    <div class="d-flex justify-content-between fw-bold mb-3">
+      <span>Total</span><span>${formatarValor(somarServicos(o.servicos))}</span>
+    </div>
+    ${acao}`;
 }
 
-preencherClientes();
-preencherServicos();
 atualizarTabela();
+
+// vindo da Home (ordem.html?os=3)
+const osUrl = Number(new URLSearchParams(location.search).get("os"));
+if (osUrl) verOS(osUrl);

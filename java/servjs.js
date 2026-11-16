@@ -10,21 +10,29 @@ if (!serv) {
 
 let idEditando = null;
 
-function servicosFiltrados() {
-  const termo = termoBusca.trim().toLowerCase(); // trim tira espaços do fim e diminui para minuscula
-  if (!termo) return serv;
-  return serv.filter(
-    (s) =>
-      s.nome.toLowerCase().includes(termo) ||
-      codigoServico(s.id).toLowerCase().includes(termo),
-  );
+let termoBusca = "";
+
+function filtrarServicos(valor) {
+  termoBusca = valor;
+  atualizarTabela();
 }
 
+function servicosFiltrados() {
+  const termo = termoBusca.trim().toLowerCase();
+  if (!termo) return serv;
+  return serv.filter(
+    (s) => s.nome.toLowerCase().includes(termo) || String(s.id).includes(termo),
+  );
+}
 function listarServicos() {
-  const lista = serv;
+  const lista = servicosFiltrados();
 
   if (lista.length === 0) {
-    return `<tr><td colspan="3" class="text-center text-secondary py-5">Nenhum serviço encontrado</td></tr>`;
+    const msg =
+      serv.length === 0
+        ? "Nenhum serviço cadastrado"
+        : "Nenhum serviço encontrado";
+    return `<tr><td colspan="3" class="text-center text-secondary py-5">${msg}</td></tr>`;
   }
 
   let retorno = "";
@@ -44,12 +52,14 @@ function listarServicos() {
   return retorno;
 }
 function atualizarTabela() {
+  const lista = servicosFiltrados();
+
   document.getElementById("tabela").innerHTML = listarServicos();
   document.getElementById("contador").textContent = serv.length;
-  document.getElementById("rodape").textContent =
-    `Mostrando ${serv.length} serviços`;
+  document.getElementById("rodape").textContent = termoBusca.trim()
+    ? `Mostrando ${lista.length} de ${serv.length} serviços`
+    : `Mostrando ${serv.length} serviços`;
 }
-
 //botão limpar formulario
 function limparForm() {
   document.getElementById("formServico").reset();
